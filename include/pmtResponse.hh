@@ -138,6 +138,10 @@ public:
 	  */
 	double getMaximumTime() const { return maximumTime; }
 
+	/** Get the fast trigger from the pmt signal
+	  */
+	bool getTrigger() const {return isTriggered; }
+	
 	/** Get a pointer to the array of Poly CFD parameters
 	  * @return Pointer to an array of 7 doubles 
 	  */
@@ -440,6 +444,7 @@ private:
 	size_t pulseLength; ///< Length of the raw and digitized ADC light pulses (in ADC clock ticks)
 	
 	bool isDigitized; ///< Flag indicating that the light response pulse has been digitized
+	bool isTriggered; ///< Flag to indicate if signal would trigger a filter
 	bool useSpectralResponse; ///< Flag indicating that PMT anode quantum efficiency spectrum should be used to compute anode gain
 	bool pulseIsSaturated; ///< Flag indicating that the digitized pulse has exceeded the maximum ADC dynamic range
 	bool printTrace; ///< Flag indicating that the left and right digitized PMT traces will be printed to the screen

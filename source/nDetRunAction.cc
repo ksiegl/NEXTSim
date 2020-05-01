@@ -230,7 +230,7 @@ bool nDetRunAction::processDetector(nDetDetector* det){
 
 	// Get the time offset due to straggling in the target (if applicable)
 	double targetTimeOffset = source->GetTargetTimeOffset();
-
+	bool Ftrigger = false;
 	// Get pointers to the CoM calculators
 	centerOfMass *cmL = det->getCenterOfMassL();
 	centerOfMass *cmR = det->getCenterOfMassR();
@@ -305,6 +305,9 @@ bool nDetRunAction::processDetector(nDetDetector* det){
 	debugData.pulseMax[1] = pmtR->getMaximum();
 	debugData.pulseMaxTime[1] = pmtR->getMaximumTime();
 	debugData.pulseArrival[1] = pmtR->getWeightedPhotonArrivalTime();		
+
+	// Set Trigger boolean for events that would register in DAQ
+	if(pmtR->getTrigger() && pmtL->getTrigger() && abs(pmtL->getMaximumTime()-pmtR->getMaximumTime()) < 5) Ftrigger = true;
 
 	// Print the digitized traces.
 	if(pmtL->getPrintTrace() || pmtR->getPrintTrace()){
@@ -381,11 +384,14 @@ bool nDetRunAction::processDetector(nDetDetector* det){
 	}
 
 	// Compute the light balance (Z).
-	//outData.lightBalance = (debugData.pulseQDC[0]-debugData.pulseQDC[1])/(debugData.pulseQDC[0]+debugData.pulseQDC[1]);
-	outData.lightBalance = (debugData.pulsePhase[0]-debugData.pulsePhase[1]);
-
+	if(debugData.pulseQDC[0]>0 && debugData.pulseQDC[1]>0)
+		outData.lightBalance = (debugData.pulseQDC[0]-debugData.pulseQDC[1])/(debugData.pulseQDC[0]+debugData.pulseQDC[1]);
+	outData.tdiff = (debugData.pulsePhase[0]-debugData.pulsePhase[1]);
+	outData.photonTdiff = (debugData.photonAvgTime[0] - debugData.photonAvgTime[1]);
+	
 	// Compute "bar" variables.
-	outData.barTOF = (debugData.pulsePhase[0]+debugData.pulsePhase[1])/2-distribution(generator);
+	double offset = distribution(generator);
+	outData.barTOF = (debugData.pulsePhase[0]+debugData.pulsePhase[1])/2-offset;
 	outData.barQDC = std::sqrt(abs(debugData.pulseQDC[0])*abs(debugData.pulseQDC[1]));
 	if(debugData.pulseQDC[0]<0 || debugData.pulseQDC[1]<0){
 		if(verbose)
@@ -393,6 +399,8 @@ bool nDetRunAction::processDetector(nDetDetector* det){
 		outData.barQDC=-999;
 	}
 	outData.barMaxADC = std::sqrt(abs(debugData.pulseMax[0])*abs(debugData.pulseMax[1]));
+	outData.barTrig = Ftrigger;
+	outData.photonTOF = (debugData.photonAvgTime[0]+debugData.photonAvgTime[1])/2.0-offset;
 	outData.photonComX = (debugData.photonDetComX[0] + debugData.photonDetComX[1]) / 2;
 	outData.photonComY = (debugData.photonDetComY[0] + debugData.photonDetComY[1]) / 2;
 

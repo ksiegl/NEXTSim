@@ -393,14 +393,14 @@ void nDetWorld::BuildE14060(nDetMaterials *materials){
 	G4VPhysicalVolume* ImplantPLA_phys = new G4PVPlacement(stack_transformation, ImplantPLA_log, "ImplantPLA_PhysV", logV, false, 0);
 	G4VPhysicalVolume* ImplantLG_phys = new G4PVPlacement(stack_transformation, ImplantLG_log, "ImplantLG_PhysV", logV, false, 0);
 
-	CloverQuadDetector* clover = new CloverQuadDetector(physV,(G4double)5*cm,(G4double)0,(G4double)0,(G4double)0,(G4int)0);
+	CloverQuadDetector* clover = new CloverQuadDetector(physV,(G4double)5.2*cm,(G4double)0,(G4double)0,(G4double)0,(G4int)0);
 	clover->Construct();
 	VANDLEFrame_phys->CheckOverlaps();
 	ImplantYAP_phys->CheckOverlaps();
 
-	G4double floorThickness = 2.5*cm;
+	G4double floorThickness = 1.25*cm;
 	G4double floorSurfaceY = 122*cm;
-	G4double concreteDistance = 100*cm;
+	G4double concreteDistance = 86.36*cm;
 	G4Box *floorBox = new G4Box("floor", hallSize.getX()/2, hallSize.getY()/2, floorThickness/2);
 	G4Box *concreteBox = new G4Box("concrete", hallSize.getX()/2, hallSize.getY()/2, 100*cm);
 	G4LogicalVolume *floor_logV;

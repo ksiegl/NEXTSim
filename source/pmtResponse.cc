@@ -126,14 +126,14 @@ void spectralResponse::clear(){
 
 pmtResponse::pmtResponse() : risetime(4.0), falltime(20.0), timeSpread(0), traceDelay(50), gain(1E4), maximum(-9999), baseline(-9999),
                              baselineFraction(0), baselineJitterFraction(0), polyCfdFraction(0.5), adcClockTick(4), tLatch(0), pulseIntegralLow(5), pulseIntegralHigh(10),
-                             maxIndex(0), adcBins(4096), pulseLength(100), isDigitized(false), useSpectralResponse(false), pulseIsSaturated(false),
+                             maxIndex(0), adcBins(4096), pulseLength(100), isDigitized(false), isTriggered(false), useSpectralResponse(false), pulseIsSaturated(false),
                              printTrace(false), pulseArray(), spec(), minimumArrivalTime(0), functionType(EXPO) {
 	this->setPulseLength(pulseLength);
 }
 
 pmtResponse::pmtResponse(const double &risetime_, const double &falltime_) : risetime(risetime_), falltime(falltime_), timeSpread(0), traceDelay(50), gain(1E4), maximum(-9999), baseline(-9999),
                                                                              baselineFraction(0), baselineJitterFraction(0), polyCfdFraction(0.5), adcClockTick(4), tLatch(0), pulseIntegralLow(5), pulseIntegralHigh(10),
-                                                                             maxIndex(0), adcBins(4096), pulseLength(100), isDigitized(false), useSpectralResponse(false), pulseIsSaturated(false),
+                                                                             maxIndex(0), adcBins(4096), pulseLength(100), isDigitized(false), isTriggered(false), useSpectralResponse(false), pulseIsSaturated(false),
                                                                              printTrace(false), pulseArray(), spec(), minimumArrivalTime(0), functionType(EXPO) {
 	this->setPulseLength(pulseLength);
 }
@@ -291,7 +291,7 @@ double pmtResponse::integratePulse(const size_t &start_, const size_t &stop_){
 	for(size_t i = start_+1; i < stop; i++){ // Integrate using trapezoidal rule.
 		qdc += 0.5*(pulseArray[i-1] + pulseArray[i]) - baseline;
 	}
-
+	if(qdc>50) isTriggered = true;
 	return qdc;
 }
 
@@ -360,14 +360,21 @@ double pmtResponse::analyzePolyCFD(const double &F_){
 	double phase = -9999;
 	for(unsigned short cfdIndex = maxIndex; cfdIndex > 0; cfdIndex--){
 		if(pulseArray[cfdIndex-1] < threshold && pulseArray[cfdIndex] >= threshold){
+			if(false){
 			calculateP2(cfdIndex-1, &pulseArray[cfdIndex-1], &cfdPar[4]);
-			
 			// Calculate the phase of the trace.
 			if(cfdPar[6] != 0)
 				phase = (-cfdPar[5]+std::sqrt(cfdPar[5]*cfdPar[5] - 4*cfdPar[6]*(cfdPar[4] - threshold)))/(2*cfdPar[6]);
 			else
 				phase = (threshold-cfdPar[4])/cfdPar[5];
-
+			}
+			else if (true){
+				double x[2] = {(double)(cfdIndex-1), (double)cfdIndex};
+				double p1 = (pulseArray[x[1]]-pulseArray[x[0]]) / (x[1]-x[0]);
+				double p0 = pulseArray[x[1]]-p1*x[1];
+			
+				phase = ( threshold - p0 ) / p1;
+			}
 			break;
 		}
 	}
@@ -413,7 +420,7 @@ void pmtResponse::clear(){
 	maxIndex = 0;
 	
 	isDigitized = false;
-	
+	isTriggered = false;
 	for(size_t i = 0; i < pulseLength; i++)
 		pulseArray[i] = 0;
 }
