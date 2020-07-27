@@ -61,7 +61,14 @@ void nDetMaterials::initialize(){
 	elementList["O"] = fO;
 	elementList["F"] = fF;
 	elementList["Si"] = fSi;
-	elementList["Al"] = fAl;
+	elementList["Y"] = fAl;
+	elementList["La"] = fLa;
+	elementList["Br"] = fBr;
+	elementList["Na"] = fNa;
+	elementList["I"] = fI;
+	elementList["Cr"] = fCr;
+	elementList["Fe"] = fFe;
+	elementList["Ni"] = fNi;
 	
 	materialList["air"] = fAir;
 	materialList["vacuum"] = fVacuum;
@@ -74,6 +81,13 @@ void nDetMaterials::initialize(){
 	materialList["mylar"] = fMylar;
 	materialList["acrylic"] = fAcrylic;
 	materialList["aluminum"] = fAluminum;
+	materialList["labr3"] = fLaBr3;
+	materialList["nai"] = fNaI;
+	materialList["yap"] = fYAP;
+	materialList["yso"] = fYSO;
+	materialList["steel"] = fSteel;
+	materialList["mumetal"] = fMuMetal;
+	materialList["hdpe"] = fHDPE;
 
 	opticalSurfaceList["teflon"] = fTeflonOpSurf;
 	opticalSurfaceList["silicon"] = fSiliconOpSurf;
@@ -353,12 +367,65 @@ void nDetMaterials::defineMaterials(){
 	fF = nist.searchForElement("F");
 	fSi = nist.searchForElement("Si");
 	fAl = nist.searchForElement("Al");
+	fY = nist.searchForElement("Y");
+	fLa = nist.searchForElement("La");
+	fBr = nist.searchForElement("Br");
+	fNa = nist.searchForElement("Na");
+	fI = nist.searchForElement("I");
+	fCr = nist.searchForElement("Cr");
+	fFe = nist.searchForElement("Fe");
+	fNi = nist.searchForElement("Ni");
+	fCu = nist.searchForElement("Cu");
 
 	// Air
     fAir = nist.searchForMaterial("G4_AIR");
 
 	// Lab vacuum
 	fVacuum = nist.searchForMaterial("G4_Galactic");
+
+	//Sodium Iodide
+	fNaI = nist.searchForMaterial("G4_SODIUM_IODIDE");
+	
+	//High-Density Polyethylene
+	fHDPE = nist.searchForMaterial("G4_POLYETHYLENE");
+
+	//Stainless Steel
+	fSteel = nist.searchForMaterial("G4_STAINLESS-STEEL");
+
+	G4int ncomp = 3;
+    	fYSO =new G4Material("YSO", 4.5*g/cm3, ncomp); 
+    	G4int nAtoms;
+    	fYSO->AddElement(fY,  nAtoms=2);
+    	fYSO->AddElement(fSi,  nAtoms=1);
+   	 fYSO->AddElement(fO,  nAtoms=5);
+
+	//YAP
+	fYAP =new G4Material("YAP", 5.37*g/cm3, ncomp); 
+    	fYAP->AddElement(fY,  nAtoms=1);
+    	fYAP->AddElement(fAl,  nAtoms=1);
+   	fYAP->AddElement(fO,  nAtoms=3);
+    
+    	// Lanthanum Bromide
+    	G4int ncomp_labr3 = 2;
+    	fLaBr3 = new G4Material("LaBr3", 5.06*g/cm3, ncomp_labr3);
+    	fLaBr3->AddElement(fLa,  nAtoms=1);
+    	fLaBr3->AddElement(fBr,  nAtoms=3);
+
+    	// PLA
+    	G4int ncomp_PLA = 3;
+    	fPLA = new G4Material("PLA", 1.24*g/cm3, ncomp_PLA);
+    	fPLA->AddElement(fH,  nAtoms = 1);
+    	fPLA->AddElement(fO,  nAtoms = 3);
+    	fPLA->AddElement(fC,  nAtoms = 3);
+    
+    	materialList["PLA"] = fPLA;
+
+	// Mu-Metal
+    	G4int ncomp_MM = 3;
+    	fMuMetal = new G4Material("MuMetal", 1.24*g/cm3, ncomp_PLA);
+    	fMuMetal->AddElement(fNi,  nAtoms = 77);
+    	fMuMetal->AddElement(fFe,  nAtoms = 16);
+    	fMuMetal->AddElement(fCu,  nAtoms = 5);
 
 	/////////////////////////////////////////////////////////////////
 	// Teflon (C2F4)n

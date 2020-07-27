@@ -104,7 +104,7 @@ void nDetWorld::buildExpHall(nDetMaterials *materials){
 		obj->placeObject(logV, materials);
 	}
 	
-	if(!expName.empty() && expName!="isolde" && expName!="RIKEN" && expName!="ORNL2016" && expName!="Argonne" && expName!="FDSi") 
+	if(!expName.empty() && expName!="isolde" && expName!="RIKEN" && expName!="ORNL2016" && expName!="Argonne" && expName!="FDSi" && expName!="e14060") 
 		cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" <<
 				"<<<<<<<<<<<<<<<<<<<<<<<<< Unrecognizable expriment name. Please check for appropriate naming schemes. >>>>>>>>>>>>>>>>>>>>>>>>>\n" <<
 				"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
@@ -117,6 +117,8 @@ void nDetWorld::buildExpHall(nDetMaterials *materials){
 	if(expName=="isolde") BuildCERNElements();
 
 	if(expName=="FDSi") BuildFDSi(materials);
+
+	if(expName=="e14060") BuildE14060(materials);
 
 	return;
 }
@@ -276,6 +278,122 @@ void nDetWorld::BuildFDSi(nDetMaterials *materials){
 	G4Transform3D transformation(rotation, G4ThreeVector(0, 0, 0));
 	//G4VPhysicalVolume* Ball_phys = new G4PVPlacement(transformation, Ball_log, "Ball_PhysV", logV, false, 0);
 	G4VPhysicalVolume* VANDLEFrame_phys = new G4PVPlacement(transformation, VANDLEFrame_log, "VANDLEFrame_PhysV", logV, false, 0);
+}
+
+void nDetWorld::BuildE14060(nDetMaterials *materials){ 
+	G4RotationMatrix frame_rotation = G4RotationMatrix();
+	frame_rotation.rotateX(90*degree);
+	G4RotationMatrix stack_rotation = G4RotationMatrix();
+	stack_rotation.rotateZ(-90*degree);
+
+	CADMesh* VANDLEFrame_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_full_frame_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* Foam_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_double_styrofoam_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* HAGFrame_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_double_HAGRID_mount_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* HAGShell_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_HAGRiD_Crystal_shells_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* HAGCrystal_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_HAGRiD_Crystal_labr_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* HAGPMT_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_HAGRiD_PMTs_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	//CADMesh* NaIShell_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_NaI_Shell_Stack_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* NaICrystal_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_NaI_Crystal_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	
+	CADMesh* ImplantFrame_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/Implant_Frame_Al_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* ImplantYAP_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/E14060_YAP_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* ImplantLG_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/Quartz_LightGuide_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* ImplantVeto_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/VETO_Plastic_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* ImplantAngr_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/Angr_board_round_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	CADMesh* ImplantPLA_mesh = new CADMesh(const_cast<char*>("/SCRATCH/DScratch3/e14060/stl/Implant_Frame_Pla_mm_high.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false);
+	
+	
+	G4VSolid* VANDLEFrame_sol = VANDLEFrame_mesh->TessellatedMesh();
+	G4VSolid* Foam_sol = Foam_mesh->TessellatedMesh();
+	G4VSolid* HAGFrame_sol = HAGFrame_mesh->TessellatedMesh();
+	G4VSolid* HAGShell_sol = HAGShell_mesh->TessellatedMesh();
+	G4VSolid* HAGCrystal_sol = HAGCrystal_mesh->TessellatedMesh();
+	G4VSolid* HAGPMT_sol = HAGPMT_mesh->TessellatedMesh();
+	//G4VSolid* NaIShell_sol = NaIShell_mesh->TessellatedMesh();
+	G4VSolid* NaICrystal_sol = NaICrystal_mesh->TessellatedMesh();
+
+	G4VSolid* ImplantFrame_sol = ImplantFrame_mesh->TessellatedMesh();
+	G4VSolid* ImplantYAP_sol = ImplantYAP_mesh->TessellatedMesh();
+	G4VSolid* ImplantVeto_sol = ImplantVeto_mesh->TessellatedMesh();
+	G4VSolid* ImplantAngr_sol = ImplantAngr_mesh->TessellatedMesh();
+	G4VSolid* ImplantPLA_sol = ImplantPLA_mesh->TessellatedMesh();
+	G4VSolid* ImplantLG_sol = ImplantLG_mesh->TessellatedMesh();
+	
+
+
+	G4Material* Frame_mat = materials->fAluminum;
+	G4Material* Foam_mat = materials->fPLA;
+	G4Material* HAG_mat = materials->fLaBr3;
+	G4Material* PMT_mat = materials->fMuMetal;
+	G4Material* NaIShell_mat = materials->fSteel;
+	G4Material* NaI_mat = materials->fNaI;
+	G4Material* YAP_mat = materials->fYAP;
+	G4Material* LG_mat = materials->fSiO2;
+	G4Material* Veto_mat = materials->fEJ200;
+	
+	G4LogicalVolume* VANDLEFrame_log= new G4LogicalVolume(VANDLEFrame_sol, Frame_mat,"Frame log");
+	G4LogicalVolume* Foam_log= new G4LogicalVolume(Foam_sol, Foam_mat,"Foam log");
+	G4LogicalVolume* HAGFrame_log= new G4LogicalVolume(HAGFrame_sol, Frame_mat,"HAGFrame log");
+	G4LogicalVolume* HAGShell_log= new G4LogicalVolume(HAGShell_sol, Frame_mat,"HAGShell log");
+	G4LogicalVolume* HAGCrystal_log= new G4LogicalVolume(HAGCrystal_sol, HAG_mat,"HAGCrystal log");
+	G4LogicalVolume* HAGPMT_log= new G4LogicalVolume(HAGPMT_sol, PMT_mat,"HAGPMT log");
+	//G4LogicalVolume* NaIShell_log= new G4LogicalVolume(VANDLEFrame_sol, NaIShell_mat,"NaIShell log");
+	G4LogicalVolume* NaICrystal_log= new G4LogicalVolume(NaICrystal_sol, NaI_mat,"NaI Crystal log");
+
+	G4LogicalVolume* ImplantFrame_log= new G4LogicalVolume(ImplantFrame_sol, Frame_mat,"ImplantFrame log");
+	G4LogicalVolume* ImplantYAP_log= new G4LogicalVolume(ImplantYAP_sol, YAP_mat,"ImplantYAP log");
+	G4LogicalVolume* ImplantVeto_log= new G4LogicalVolume(ImplantVeto_sol, Veto_mat,"ImplantVeto log");
+	G4LogicalVolume* ImplantAngr_log= new G4LogicalVolume(ImplantFrame_sol, NaIShell_mat,"ImplantAngr log");
+	G4LogicalVolume* ImplantPLA_log= new G4LogicalVolume(ImplantPLA_sol, Foam_mat,"ImplantPLA log");
+	G4LogicalVolume* ImplantLG_log= new G4LogicalVolume(ImplantFrame_sol, LG_mat,"ImplantLG log");
+
+
+    G4VisAttributes* Al_vis_att 	= new G4VisAttributes(G4Colour(0.65,0.65,0.65));
+    G4VisAttributes* Steel_vis_att 	= new G4VisAttributes(G4Colour(0.45,0.45,0.45));
+	Steel_vis_att->SetForceSolid(true);
+    G4VisAttributes* Det_vis_att 	= new G4VisAttributes(G4Colour(0.0,0.95,0.0));
+    G4VisAttributes* YAP_vis_att 	= new G4VisAttributes(G4Colour(0.0,0,0,0.95));
+	YAP_vis_att->SetForceSolid();
+    G4VisAttributes* PMT_vis_att 	= new G4VisAttributes(G4Colour(0.15,0.15,0.15));
+    G4VisAttributes* Foam_vis_att 	= new G4VisAttributes(G4Colour(0.85,0.85,0.85));
+	
+	VANDLEFrame_log->SetVisAttributes(Al_vis_att);
+	Foam_log->SetVisAttributes(Foam_vis_att);
+	HAGFrame_log->SetVisAttributes(Al_vis_att);
+	HAGShell_log->SetVisAttributes(Al_vis_att);
+	HAGCrystal_log->SetVisAttributes(Det_vis_att);
+	//NaIShell_log->SetVisAttributes(Steel_vis_att);
+	NaICrystal_log->SetVisAttributes(Det_vis_att);
+	HAGPMT_log->SetVisAttributes(PMT_vis_att);
+
+	ImplantFrame_log->SetVisAttributes(Al_vis_att);
+	ImplantYAP_log->SetVisAttributes(YAP_vis_att);
+	ImplantVeto_log->SetVisAttributes(Det_vis_att);
+	ImplantAngr_log->SetVisAttributes(Steel_vis_att);
+	ImplantPLA_log->SetVisAttributes(Foam_vis_att);
+	ImplantLG_log->SetVisAttributes(Foam_vis_att);
+	
+	G4Transform3D frame_transformation(frame_rotation, G4ThreeVector(0,0,19*cm));
+	
+	G4VPhysicalVolume* VANDLEFrame_phys = new G4PVPlacement(frame_transformation, VANDLEFrame_log, "VANDLEFrame_PhysV", logV, false, 0);
+	G4VPhysicalVolume* Foam_phys = new G4PVPlacement(frame_transformation, Foam_log, "Foam_PhysV", logV, false, 0);
+	G4VPhysicalVolume* HAGFrame_phys = new G4PVPlacement(frame_transformation, HAGFrame_log, "HAGFrame_PhysV", logV, false, 0);
+	G4VPhysicalVolume* HAGShell_phys = new G4PVPlacement(frame_transformation, HAGShell_log, "HAGShell_PhysV", logV, false, 0);
+	G4VPhysicalVolume* HAGCrystal_phys = new G4PVPlacement(frame_transformation, HAGCrystal_log, "HAGCrystal_PhysV", logV, false, 0);
+	G4VPhysicalVolume* HAGPMT_phys = new G4PVPlacement(frame_transformation, HAGPMT_log, "HAGPMT_PhysV", logV, false, 0);
+	//G4VPhysicalVolume* NaIShell_phys = new G4PVPlacement(frame_transformation, NaIShell_log, "NaIShell_PhysV", logV, false, 0);
+	G4VPhysicalVolume* NaICrystal_phys = new G4PVPlacement(frame_transformation, NaICrystal_log, "NaICrystal_PhysV", logV, false, 0);
+
+	G4Transform3D stack_transformation(stack_rotation,G4ThreeVector(-2.3*cm,0,0));
+
+	G4VPhysicalVolume* ImplantFrame_phys = new G4PVPlacement(stack_transformation, ImplantFrame_log, "ImplantFrame_PhysV", logV, false, 0);
+	G4VPhysicalVolume* ImplantYAP_phys = new G4PVPlacement(stack_transformation, ImplantYAP_log, "ImplantYAP_PhysV", logV, false, 0);
+	G4VPhysicalVolume* ImplantVeto_phys = new G4PVPlacement(stack_transformation, ImplantVeto_log, "ImplantVeto_PhysV", logV, false, 0);
+	G4VPhysicalVolume* ImplantAngr_phys = new G4PVPlacement(stack_transformation, ImplantAngr_log, "ImplantAngr_PhysV", logV, false, 0);
+	G4VPhysicalVolume* ImplantPLA_phys = new G4PVPlacement(stack_transformation, ImplantPLA_log, "ImplantPLA_PhysV", logV, false, 0);
+	G4VPhysicalVolume* ImplantLG_phys = new G4PVPlacement(stack_transformation, ImplantLG_log, "ImplantLG_PhysV", logV, false, 0);
+
+	ImplantYAP_phys->CheckOverlaps();
 }
 
 nDetWorldPrimitive *nDetWorld::addNewPrimitive(const G4String &str){

@@ -32,6 +32,15 @@ class nDetMaterials{
     G4Element* fF; ///< Flourine
     G4Element* fSi; ///< Silicon
     G4Element* fAl; ///< Aluminium
+    G4Element* fY; ///<Yttrium
+    G4Element* fLa; ///<Lanthanum
+    G4Element* fBr; ///<Bromine
+    G4Element* fNa; ///<Sodium
+    G4Element* fI; ///<Iodine
+    G4Element* fCr; ///<Chromium
+    G4Element* fFe; ///<Iron
+    G4Element* fNi; ///<Nickel
+    G4Element* fCu; ///<Copper
 
     G4Material* fAir; ///< Material corresponding to air
     G4Material* fVacuum; ///< Material corresponding to natural vacuum
@@ -43,7 +52,16 @@ class nDetMaterials{
     G4Material* fSilicon; ///< Material corresponding to silicon
     G4Material* fMylar; ///< Material corresponding to aluminized mylar
     G4Material* fAcrylic; ///< Material corresponding to acrylic
-	G4Material* fAluminum; ///< Material corresponding to aluminum
+    G4Material* fAluminum; ///< Material corresponding to aluminum
+    G4Material* fLaBr3; ///< Lanthanum Bromide detector material
+    G4Material* fNaI; ///< Sodium Iodide detector material
+    G4Material* fYAP; ///< Yttrium Aluminum Perovskite detecor material
+    G4Material* fYSO; ///< Yttrium Orthosilicate detecor material
+    G4Material* fSteel; ///< Stainless Steel material
+    G4Material* fMuMetal; ///< Mu Metal material
+    G4Material* fHDPE; ///< High Density Polyethylene material
+    G4Material* fPLA; ///<Material correspondint to PLA
+
 
     // Material table properties
     G4MaterialPropertiesTable* fAirMPT; ///< Material properties table for air
@@ -53,10 +71,10 @@ class nDetMaterials{
     G4MaterialPropertiesTable* fGreaseMPT; ///< Material properties table for optical grease
     G4MaterialPropertiesTable* fSiO2MPT; ///< Material properties table for quartz
     G4MaterialPropertiesTable* fSiliconMPT; ///< Material properties table for silicon
-	G4MaterialPropertiesTable* fMylarMPT; ///< Material properties table for aluminized mylar
-	G4MaterialPropertiesTable* fPerfectMPT; ///< Material properties table for a perfect reflector
-	G4MaterialPropertiesTable* fAluminumMPT; ///< Material properties table for aluminum
-	G4MaterialPropertiesTable* fEsrMPT; ///< Material properties table for 3M Enhanced Specular Reflector
+    G4MaterialPropertiesTable* fMylarMPT; ///< Material properties table for aluminized mylar
+    G4MaterialPropertiesTable* fPerfectMPT; ///< Material properties table for a perfect reflector
+    G4MaterialPropertiesTable* fAluminumMPT; ///< Material properties table for aluminum
+    G4MaterialPropertiesTable* fEsrMPT; ///< Material properties table for 3M Enhanced Specular Reflector
 
     // Optical Surfaces
     G4OpticalSurface* fTeflonOpSurf; ///< Optical surface for teflon

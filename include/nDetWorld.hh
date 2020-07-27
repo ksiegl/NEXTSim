@@ -94,6 +94,10 @@ class nDetWorld{
 	 */
 	void BuildFDSi(nDetMaterials *materials);
 
+	/** Build NSCL e14060 setup
+	 */
+	void BuildE14060(nDetMaterials *materials);
+
 	/** Add a new Geant primitive object to the world
 	  * @param str Space-delimited input string with format specified in nDetWorldPrimitive::decodeArgs()
 	  * @return A pointer to the new object if construction was successful and return NULL if construction failed
