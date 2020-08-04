@@ -89,15 +89,20 @@ G4VPhysicalVolume* CloverQuadDetector::Construct()
     // Detector Construction
     //
     // Meshing
- 
-    mesh_Capsule	= new CADMesh(const_cast<char*>("/ARCHIVE/Ddata/geant4_stl/vandle/isolde/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_capsule2_1.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
+ /*
+    mesh_Capsule	= new CADMesh(const_cast<char*>("/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_capsule2_1.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
     mesh_CapsuleCap	= new CADMesh(const_cast<char*>("/ARCHIVE/Ddata/geant4_stl/vandle/isolde/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_Capsule_cap_2.stl"),    mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
     mesh_CarboneWindow	= new CADMesh(const_cast<char*>("/ARCHIVE/Ddata/geant4_stl/vandle/isolde/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_Carbone_window_3.stl"), mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
-
+*/
 	
-	
+    mesh_Capsule	= new CADMesh(const_cast<char*>("/home/ksiegl/NEXTSim/stl/Clover_Assembly_RefModif_capsule2_1.stl"),       mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
+    mesh_CapsuleCap	= new CADMesh(const_cast<char*>("/home/ksiegl/NEXTSim/stl/Clover_Assembly_RefModif_Capsule_cap_2.stl"),    mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
+    mesh_CarboneWindow	= new CADMesh(const_cast<char*>("/home/ksiegl/NEXTSim/stl/Clover_Assembly_RefModif_Carbone_window_3.stl"), mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015 
+	  cout<<"./stl/Clover_Assembly_RefModif_capsule2_1.stl"<<endl;
     Capsule_sol		= mesh_Capsule->TessellatedMesh();
+    cout<<"./stl/Clover_Assembly_RefModif_Capsule_cap_2.stl"<<endl;
     CapsuleCap_sol	= mesh_CapsuleCap->TessellatedMesh();
+    cout<<"./stl/Clover_Assembly_RefModif_Carbone_window_3.stl"<<endl;
     CarboneWindow_sol	= mesh_CarboneWindow->TessellatedMesh();
 
     // Logical Volume

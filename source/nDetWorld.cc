@@ -384,7 +384,7 @@ void nDetWorld::BuildE14060(nDetMaterials *materials){
 	//G4VPhysicalVolume* NaIShell_phys = new G4PVPlacement(frame_transformation, NaIShell_log, "NaIShell_PhysV", logV, false, 0);
 	G4VPhysicalVolume* NaICrystal_phys = new G4PVPlacement(frame_transformation, NaICrystal_log, "NaICrystal_PhysV", logV, false, 0);
 
-	G4Transform3D stack_transformation(stack_rotation,G4ThreeVector(-2.3*cm,0,0));
+	G4Transform3D stack_transformation(stack_rotation,G4ThreeVector(-2.3*cm,6.65*cm,0));
 
 	G4VPhysicalVolume* ImplantFrame_phys = new G4PVPlacement(stack_transformation, ImplantFrame_log, "ImplantFrame_PhysV", logV, false, 0);
 	G4VPhysicalVolume* ImplantYAP_phys = new G4PVPlacement(stack_transformation, ImplantYAP_log, "ImplantYAP_PhysV", logV, false, 0);
@@ -393,7 +393,26 @@ void nDetWorld::BuildE14060(nDetMaterials *materials){
 	G4VPhysicalVolume* ImplantPLA_phys = new G4PVPlacement(stack_transformation, ImplantPLA_log, "ImplantPLA_PhysV", logV, false, 0);
 	G4VPhysicalVolume* ImplantLG_phys = new G4PVPlacement(stack_transformation, ImplantLG_log, "ImplantLG_PhysV", logV, false, 0);
 
+	CloverQuadDetector* clover = new CloverQuadDetector(physV,(G4double)5*cm,(G4double)0,(G4double)0,(G4double)0,(G4int)0);
+	clover->Construct();
+	VANDLEFrame_phys->CheckOverlaps();
 	ImplantYAP_phys->CheckOverlaps();
+
+	G4double floorThickness = 2.5*cm;
+	G4double floorSurfaceY = 122*cm;
+	G4double concreteDistance = 100*cm;
+	G4Box *floorBox = new G4Box("floor", hallSize.getX()/2, hallSize.getY()/2, floorThickness/2);
+	G4Box *concreteBox = new G4Box("concrete", hallSize.getX()/2, hallSize.getY()/2, 100*cm);
+	G4LogicalVolume *floor_logV;
+	G4LogicalVolume *concrete_logV;
+	floor_logV = new G4LogicalVolume(floorBox, materials->fSteel, "floor_logV");
+	floor_logV->SetVisAttributes(Steel_vis_att);
+	G4Material* Concrete_mat = materials->getMaterial("G4_CONCRETE");
+	concrete_logV = new G4LogicalVolume(concreteBox, Concrete_mat, "concrete_logV");
+	concrete_logV->SetVisAttributes(Steel_vis_att);
+	//logV->SetVisAttributes(materials->visAssembly);
+	new G4PVPlacement(NULL, G4ThreeVector(0,0, -(floorSurfaceY+floorThickness/2)), floor_logV, "floorBox_physV", logV, 0, 0, false);
+	new G4PVPlacement(NULL, G4ThreeVector(0,0, -(floorSurfaceY+concreteDistance+100*cm)), concrete_logV, "concrete_physV", logV, 0, 0, false);
 }
 
 nDetWorldPrimitive *nDetWorld::addNewPrimitive(const G4String &str){
