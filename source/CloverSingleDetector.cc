@@ -47,9 +47,9 @@ G4VPhysicalVolume* CloverSingleDetector::Construct()
     // Meshing
     // 18022015 mesh_CloverSingle =  new CADMesh(const_cast<char*>(Form("../STL_export/Clover_KULeuven/Clover_Assembly_Crystal2_%i.stl",cr_nb+4)), mm,  G4ThreeVector(-0.2524*cm + 75*mm), false);
 
-//    mesh_CloverSingle =  new CADMesh(const_cast<char*>(Form("/ARCHIVE/Ddata/geant4_stl/vandle/isolde/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_Crystal2_%i.stl",cr_nb+4)), mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015
+    mesh_CloverSingle =  new CADMesh(const_cast<char*>(Form("/ARCHIVE/Ddata/geant4_stl/vandle/isolde/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_Crystal2_%i.stl",cr_nb+4)), mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015
   
-    mesh_CloverSingle =  new CADMesh(const_cast<char*>(Form("/home/ksiegl/NEXTSim/stl/Clover_Assembly_RefModif_Crystal2_%i.stl",cr_nb+4)), mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015
+//    mesh_CloverSingle =  new CADMesh(const_cast<char*>(Form("/home/ksiegl/NEXTSim/stl/Clover_Assembly_RefModif_Crystal2_%i.stl",cr_nb+4)), mm,  G4ThreeVector(0*cm, 0*cm, 0*cm), false); // back to 08122015
 
   
     //G4cout << Form("/home/jheidema/opt/NEXTSim/STL_export/Clover_KULeuven_RefFace/Clover_Assembly_RefModif_Crystal2_%i.stl",cr_nb+4) << G4endl; 
